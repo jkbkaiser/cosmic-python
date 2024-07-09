@@ -1,0 +1,24 @@
+services:
+  api:
+    build: .
+    image: cosmic-python-api
+    environment:
+      - FLASK_APP=src/allocation/entrypoints/flask_app.py
+    volumes:
+      - ./src:/src
+      - ./tests:/tests
+    entrypoint:
+      - gunicorn
+      - --bind
+      - 0.0.0.0:8000
+      - --workers
+      - "4"
+      - --log-level
+      - info
+      - --access-logfile
+      - "-"
+      - --access-logformat
+      - '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"'
+      - src.allocation.entrypoints.flask_app:app
+    ports:
+      - 8000:8000
